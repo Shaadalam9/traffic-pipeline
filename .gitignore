@@ -1,0 +1,20 @@
+data
+weights
+*/.vscode
+
+# macOS
+**/.DS_Store
+
+# sublime text project files
+*.sublime-project
+*.sublime-workspace
+
+# Python files
+*/__pycache__
+*.pyc
+*.egg-info/
+
+
+# Instance specific files
+config
+secret
