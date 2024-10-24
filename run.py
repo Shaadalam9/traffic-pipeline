@@ -9,6 +9,7 @@ import sys
 
 logs(show_level="info", show_color=True)
 logger = CustomLogger(__name__)  # use custom logger
+data_folder = common.get_configs("data")
 original_data = common.get_configs("data_original")
 img2_output_data = common.get_configs("data_img2_output")
 final_data = common.get_configs("data_final")
@@ -33,7 +34,6 @@ def video_to_frames(video_path):
         if ret:
             # Save the frame as an image file in the same directory as the video
             frame_filename = os.path.join(output_folder, f"{video_name}_frame_{frame_count:05d}.png")
-            print(frame_filename)
             cv2.imwrite(frame_filename, frame)
 
             frame_count += 1
@@ -71,7 +71,7 @@ def process_all_folders(frame_folder, fps=30):
 
     # Get the full path of the first frame to read its dimensions
     first_frame_path = os.path.join(frame_folder, frames[0])
-    frame = cv2.imread(first_frame_path)
+    frame = cv2.imread(first_frame_path)  # type: ignore
     height, width, _ = frame.shape
 
     # Define the codec and create the video writer object
@@ -217,16 +217,18 @@ def run_realesrgan_inference(model_name, input_dir, output_base_dir, face_enhanc
 
 if __name__ == "__main__":
 
-    # process_videos_in_directory(original_data)
+    # process_videos_in_directory(data_folder)
 
-    # run_inference_on_frames(original_data, img2_output_data)
+    run_inference_on_frames(original_data, img2_output_data)
 
-    # url = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
-    # output_dir = "weights"  # Folder to save the file
-    # download_file(url, output_dir)
+    url = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
+    output_dir = "weights"  # Folder to save the file
+    download_file(url, output_dir)
 
-    # run_realesrgan_inference('RealESRGAN_x4plus', img2_output_data, final_data, face_enhance=True)
+    run_realesrgan_inference('RealESRGAN_x4plus', img2_output_data, final_data, face_enhance=True)
 
     # subprocess.run(["python", "evaluate.py"])
 
-    frames_to_video(img2_output_data, fps=30)
+    # frames_to_video(img2_output_data, fps=30)
+
+    # subprocess.run(["python", "analysis.py"])

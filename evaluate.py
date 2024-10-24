@@ -20,8 +20,7 @@ img2_output_data = common.get_configs("data_img2_output")
 
 # T-SSIM (Temporal Structural Similarity Index)
 def compute_t_ssim(video_path):
-    print(video_path)
-    cap = cv2.VideoCapture(video_path)
+    cap = cv2.VideoCapture(video_path)  # type: ignore
     if not cap.isOpened():
         logger.error("Error: Could not open video.")
         return
@@ -31,7 +30,7 @@ def compute_t_ssim(video_path):
         logger.error("Error: Could not read the first frame.")
         return
 
-    prev_gray = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)
+    prev_gray = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)  # type: ignore
     ssim_values = []
 
     while True:
@@ -39,15 +38,15 @@ def compute_t_ssim(video_path):
         if not ret:
             break
 
-        curr_gray = cv2.cvtColor(curr_frame, cv2.COLOR_BGR2GRAY)
+        curr_gray = cv2.cvtColor(curr_frame, cv2.COLOR_BGR2GRAY)  # type: ignore
         ssim_value, _ = ssim(prev_gray, curr_gray, full=True)
-        print(ssim_value)
         ssim_values.append(ssim_value)
         prev_gray = curr_gray
 
     cap.release()
     t_ssim_value = np.mean(ssim_values)
-    logger.info(f"T-SSIM for the video at {video_path} is {t_ssim_value:.4f}")
+    t_ssim_variance = np.var(ssim_values)
+    logger.info(f"T-SSIM for the video at {video_path} is {t_ssim_value:.4f} and variance is {t_ssim_variance:.4f}")
 
 
 # FVD (Frechet Video Distance)
@@ -113,8 +112,8 @@ def calculate_psnr(frame1, frame2):
 
 # Calculate PSNR for an entire video
 def calculate_video_psnr(original_video_path, processed_video_path):
-    original_cap = cv2.VideoCapture(original_video_path)
-    processed_cap = cv2.VideoCapture(processed_video_path)
+    original_cap = cv2.VideoCapture(original_video_path)  # type: ignore
+    processed_cap = cv2.VideoCapture(processed_video_path)  # type: ignore
 
     if not original_cap.isOpened() or not processed_cap.isOpened():
         logger.info("Error: Could not open video files.")
@@ -131,8 +130,8 @@ def calculate_video_psnr(original_video_path, processed_video_path):
     target_size = (original_frame.shape[1], original_frame.shape[0])  # (width, height)
 
     # Reset the video captures to the beginning
-    original_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-    processed_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+    original_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
+    processed_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
 
     while True:
         ret1, original_frame = original_cap.read()
@@ -141,7 +140,7 @@ def calculate_video_psnr(original_video_path, processed_video_path):
             break
 
         # Resize processed frame to match the original frame size
-        processed_frame_resized = cv2.resize(processed_frame, target_size)
+        processed_frame_resized = cv2.resize(processed_frame, target_size)  # type: ignore
 
         psnr_value = calculate_psnr(original_frame, processed_frame_resized)
         psnr_values.append(psnr_value)
@@ -175,8 +174,8 @@ def calculate_ssim(frame1, frame2):
 
 
 def calculate_vpq(original_video_path, processed_video_path):
-    original_cap = cv2.VideoCapture(original_video_path)
-    processed_cap = cv2.VideoCapture(processed_video_path)
+    original_cap = cv2.VideoCapture(original_video_path)  # type: ignore
+    processed_cap = cv2.VideoCapture(processed_video_path)  # type: ignore
 
     if not original_cap.isOpened() or not processed_cap.isOpened():
         logger.error("Error: Could not open video files.")
@@ -194,8 +193,8 @@ def calculate_vpq(original_video_path, processed_video_path):
     target_size = (original_frame.shape[1], original_frame.shape[0])  # (width, height)
 
     # Reset the video captures to the beginning
-    original_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
-    processed_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+    original_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
+    processed_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
 
     while True:
         ret1, original_frame = original_cap.read()
@@ -204,7 +203,7 @@ def calculate_vpq(original_video_path, processed_video_path):
             break
 
         # Resize processed frame to match the original frame size
-        processed_frame_resized = cv2.resize(processed_frame, target_size)
+        processed_frame_resized = cv2.resize(processed_frame, target_size)  # type: ignore
 
         # Calculate SSIM
         ssim_value = calculate_ssim(original_frame, processed_frame_resized)
@@ -240,22 +239,14 @@ if __name__ == "__main__":
 
     print("\n")
 
-    # Iterate through videos in the generated directory for FVD
-    for root, _, files in os.walk(img2_output_data):
-        for file in files:
-            if file.endswith('.mp4'):
-                # Construct the relative path of the file
-                relative_path = os.path.relpath(root, img2_output_data)
+    # Process the videos
+    for directory in [final_data, img2_output_data]:
+        for root, _, files in os.walk(directory):
+            for file in files:
+                if file.endswith('.mp4'):
+                    video_path = os.path.join(root, file)
+                    compute_t_ssim(video_path)
 
-                # Construct paths for the original and generated video files
-                original_video_path = os.path.join(original_data, relative_path, file)
-                processed_video_path = os.path.join(root, file)
-
-                # Check if the corresponding original video exists
-                if os.path.exists(original_video_path):
-                    calculate_video_psnr(original_video_path, processed_video_path)
-                else:
-                    print(f"Original video not found for: {processed_video_path}")
     print("\n")
 
     # Iterate through videos in the generated directory for FVD
@@ -277,11 +268,11 @@ if __name__ == "__main__":
     print("\n")
 
     # Iterate through videos in the generated directory
-    for root, _, files in os.walk(final_data):
+    for root, _, files in os.walk(img2_output_data):
         for file in files:
             if file.endswith('.mp4'):
                 # Construct paths for the original and generated video files
-                relative_path = os.path.relpath(root, final_data)
+                relative_path = os.path.relpath(root, img2_output_data)
                 original_video_path = os.path.join(original_data, relative_path, file)
                 processed_video_path = os.path.join(root, file)
 
