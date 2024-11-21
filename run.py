@@ -47,6 +47,7 @@ def video_to_frames(video_path):
 
 def process_videos_in_directory(root_folder):
     # Walk through all subdirectories and files
+    print("## entering root folder")
     for dirpath, _, filenames in os.walk(root_folder):
         for file in filenames:
             if file.endswith('.mp4'):
