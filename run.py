@@ -23,7 +23,7 @@ def video_to_frames(video_path):
     video_name = os.path.splitext(os.path.basename(video_path))[0]
 
     # Open the video file
-    cap = cv2.VideoCapture(video_path)
+    cap = cv2.VideoCapture(video_path)  # type: ignore
 
     frame_count = 0
 
@@ -34,7 +34,7 @@ def video_to_frames(video_path):
         if ret:
             # Save the frame as an image file in the same directory as the video
             frame_filename = os.path.join(output_folder, f"{video_name}_frame_{frame_count:05d}.png")
-            cv2.imwrite(frame_filename, frame)
+            cv2.imwrite(frame_filename, frame)  # type: ignore
 
             frame_count += 1
         else:
@@ -75,13 +75,13 @@ def process_all_folders(frame_folder, fps=30):
     height, width, _ = frame.shape
 
     # Define the codec and create the video writer object
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # type: ignore
+    out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))  # type: ignore
 
     # Iterate over the sorted frame list and write each one to the video
     for frame_filename in frames:
         frame_path = os.path.join(frame_folder, frame_filename)
-        frame = cv2.imread(frame_path)
+        frame = cv2.imread(frame_path)  # type: ignore
         out.write(frame)
 
     # Release the video writer object
@@ -129,17 +129,17 @@ def run_inference_on_frames(base_input_dir, base_output_dir, model_name="day_to_
                                                bufsize=1, universal_newlines=True)
 
                     # Stream stdout in real time
-                    for stdout_line in iter(process.stdout.readline, ""):
+                    for stdout_line in iter(process.stdout.readline, ""):  # type: ignore
                         sys.stdout.write(stdout_line)  # Write to stdout
                         sys.stdout.flush()  # Force flush to ensure real-time output
 
                     # Stream stderr in real time
-                    for stderr_line in iter(process.stderr.readline, ""):
+                    for stderr_line in iter(process.stderr.readline, ""):  # type: ignore
                         sys.stderr.write(stderr_line)  # Write to stderr
                         sys.stderr.flush()  # Force flush to ensure real-time output
 
-                    process.stdout.close()
-                    process.stderr.close()
+                    process.stdout.close()  # type: ignore
+                    process.stderr.close()  # type: ignore
 
                     return_code = process.wait()
                     if return_code:
@@ -219,13 +219,13 @@ if __name__ == "__main__":
 
     # process_videos_in_directory(data_folder)
 
-    run_inference_on_frames(original_data, img2_output_data)
+    # run_inference_on_frames(original_data, img2_output_data)
 
-    url = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
-    output_dir = "weights"  # Folder to save the file
-    download_file(url, output_dir)
+    # url = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
+    # output_dir = "weights"  # Folder to save the file
+    # download_file(url, output_dir)
 
-    run_realesrgan_inference('RealESRGAN_x4plus', img2_output_data, final_data, face_enhance=True)
+    # run_realesrgan_inference('RealESRGAN_x4plus', img2_output_data, final_data, face_enhance=True)
 
     # subprocess.run(["python", "evaluate.py"])
 
