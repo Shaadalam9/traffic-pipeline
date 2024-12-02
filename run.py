@@ -12,6 +12,7 @@ logger = CustomLogger(__name__)  # use custom logger
 original_data = common.get_configs("data_original")
 img2_output_data = common.get_configs("data_img2_output")
 final_data = common.get_configs("data_final")
+transformation = common.get_configs("transformation")
 
 
 def video_to_frames(video_path):
@@ -97,7 +98,7 @@ def frames_to_video(root_folder, fps=30):
             process_all_folders(dirpath, fps=fps)
 
 
-def run_inference_on_frames(base_input_dir, base_output_dir, model_name="day_to_night"):
+def run_inference_on_frames(base_input_dir, base_output_dir, model_name=transformation):
     # Traverse through all subdirectories and files in base_input_dir
     for root, dirs, files in os.walk(base_input_dir):
         for file in files:
@@ -217,12 +218,12 @@ def run_realesrgan_inference(model_name, input_dir, output_base_dir, face_enhanc
 
 if __name__ == "__main__":
 
-    # process_videos_in_directory(original_data)
+    process_videos_in_directory(original_data)
     # process_videos_in_directory(img2_output_data)
     # process_videos_in_directory(final_data)
 
-    # run_inference_on_frames(original_data, img2_output_data)
-    # frames_to_video(img2_output_data, fps=30)
+    run_inference_on_frames(original_data, img2_output_data)
+    frames_to_video(img2_output_data, fps=30)
 
     url = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
     output_dir = "realesrgan_main/weights"  # Folder to save the file

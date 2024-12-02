@@ -3,7 +3,6 @@ data copy
 weights
 output
 */.vscode
-.github
 
 # macOS
 **/.DS_Store
