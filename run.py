@@ -9,7 +9,6 @@ import sys
 
 logs(show_level="info", show_color=True)
 logger = CustomLogger(__name__)  # use custom logger
-data_folder = common.get_configs("data")
 original_data = common.get_configs("data_original")
 img2_output_data = common.get_configs("data_img2_output")
 final_data = common.get_configs("data_final")
@@ -23,7 +22,7 @@ def video_to_frames(video_path):
     video_name = os.path.splitext(os.path.basename(video_path))[0]
 
     # Open the video file
-    cap = cv2.VideoCapture(video_path)  # type: ignore
+    cap = cv2.VideoCapture(video_path)
 
     frame_count = 0
 
@@ -34,7 +33,7 @@ def video_to_frames(video_path):
         if ret:
             # Save the frame as an image file in the same directory as the video
             frame_filename = os.path.join(output_folder, f"{video_name}_frame_{frame_count:05d}.png")
-            cv2.imwrite(frame_filename, frame)  # type: ignore
+            cv2.imwrite(frame_filename, frame)
 
             frame_count += 1
         else:
@@ -47,7 +46,6 @@ def video_to_frames(video_path):
 
 def process_videos_in_directory(root_folder):
     # Walk through all subdirectories and files
-    print("## entering root folder")
     for dirpath, _, filenames in os.walk(root_folder):
         for file in filenames:
             if file.endswith('.mp4'):
@@ -72,17 +70,17 @@ def process_all_folders(frame_folder, fps=30):
 
     # Get the full path of the first frame to read its dimensions
     first_frame_path = os.path.join(frame_folder, frames[0])
-    frame = cv2.imread(first_frame_path)  # type: ignore
+    frame = cv2.imread(first_frame_path)
     height, width, _ = frame.shape
 
     # Define the codec and create the video writer object
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # type: ignore
-    out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))  # type: ignore
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
 
     # Iterate over the sorted frame list and write each one to the video
     for frame_filename in frames:
         frame_path = os.path.join(frame_folder, frame_filename)
-        frame = cv2.imread(frame_path)  # type: ignore
+        frame = cv2.imread(frame_path)
         out.write(frame)
 
     # Release the video writer object
@@ -119,7 +117,7 @@ def run_inference_on_frames(base_input_dir, base_output_dir, model_name="day_to_
 
                 # Define the command with input image and output directory
                 command = [
-                    "python", "src/inference_unpaired.py",
+                    "python", "img2turbo/src/inference_unpaired.py",
                     "--model_name", model_name,
                     "--input_image", input_image_path,
                     "--output_dir", output_dir
@@ -130,17 +128,17 @@ def run_inference_on_frames(base_input_dir, base_output_dir, model_name="day_to_
                                                bufsize=1, universal_newlines=True)
 
                     # Stream stdout in real time
-                    for stdout_line in iter(process.stdout.readline, ""):  # type: ignore
+                    for stdout_line in iter(process.stdout.readline, ""):
                         sys.stdout.write(stdout_line)  # Write to stdout
                         sys.stdout.flush()  # Force flush to ensure real-time output
 
                     # Stream stderr in real time
-                    for stderr_line in iter(process.stderr.readline, ""):  # type: ignore
+                    for stderr_line in iter(process.stderr.readline, ""):
                         sys.stderr.write(stderr_line)  # Write to stderr
                         sys.stderr.flush()  # Force flush to ensure real-time output
 
-                    process.stdout.close()  # type: ignore
-                    process.stderr.close()  # type: ignore
+                    process.stdout.close()
+                    process.stderr.close()
 
                     return_code = process.wait()
                     if return_code:
@@ -178,6 +176,7 @@ def run_realesrgan_inference(model_name, input_dir, output_base_dir, face_enhanc
     for root, dirs, files in os.walk(input_dir):
         for file in files:
             # Check if the file is an image (e.g., ends with .png, .jpg, etc.)
+
             if file.endswith(('.png', '.jpg', '.jpeg')):
                 input_image_path = os.path.join(root, file)
 
@@ -193,7 +192,7 @@ def run_realesrgan_inference(model_name, input_dir, output_base_dir, face_enhanc
 
                 # Define the command with input image and output directory
                 command = [
-                    "python", "inference_realesrgan.py",
+                    "python", "realesrgan_main/inference_realesrgan.py",
                     "-n", model_name,
                     "-i", input_image_path,
                     "-o", output_dir  # Define the output directory
@@ -218,18 +217,18 @@ def run_realesrgan_inference(model_name, input_dir, output_base_dir, face_enhanc
 
 if __name__ == "__main__":
 
-    # process_videos_in_directory(data_folder)
+    # process_videos_in_directory(original_data)
+    # process_videos_in_directory(img2_output_data)
+    # process_videos_in_directory(final_data)
 
     # run_inference_on_frames(original_data, img2_output_data)
-
-    # url = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
-    # output_dir = "weights"  # Folder to save the file
-    # download_file(url, output_dir)
-
-    # run_realesrgan_inference('RealESRGAN_x4plus', img2_output_data, final_data, face_enhance=True)
-
-    # subprocess.run(["python", "evaluate.py"])
-
     # frames_to_video(img2_output_data, fps=30)
 
-    # subprocess.run(["python", "analysis.py"])
+    url = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
+    output_dir = "realesrgan_main/weights"  # Folder to save the file
+    download_file(url, output_dir)
+
+    run_realesrgan_inference('RealESRGAN_x4plus', img2_output_data, final_data, face_enhance=True)
+    frames_to_video(final_data, fps=30)
+
+    subprocess.run(["python", "evaluate.py"])

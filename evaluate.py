@@ -18,7 +18,6 @@ import os
 logs(show_level="info", show_color=True)
 logger = CustomLogger(__name__)  # use custom logger
 template = common.get_configs("plotly_template")
-data_folder = common.get_configs("data")
 final_data = common.get_configs("data_final")
 original_data = common.get_configs("data_original")
 img2_output_data = common.get_configs("data_img2_output")
@@ -329,135 +328,135 @@ if __name__ == "__main__":
     logger.info("Analysis started")
 
     # Process the videos
-    # for directory in [final_data, img2_output_data]:
-    #     for root, _, files in os.walk(directory):
-    #         for file in files:
-    #             if file.endswith('.mp4'):
-    #                 video_path = os.path.join(root, file)
-    #                 compute_t_ssim(video_path)
+    for directory in [final_data, img2_output_data]:
+        for root, _, files in os.walk(directory):
+            for file in files:
+                if file.endswith('.mp4'):
+                    video_path = os.path.join(root, file)
+                    compute_t_ssim(video_path)
 
-    # print("\n")
+    print("\n")
 
-    # # Process the videos
-    # for directory in [final_data, img2_output_data]:
-    #     for root, _, files in os.walk(directory):
-    #         for file in files:
-    #             if file.endswith('.mp4'):
-    #                 video_path = os.path.join(root, file)
-    #                 compute_t_ssim(video_path)
+    # Process the videos
+    for directory in [final_data, img2_output_data]:
+        for root, _, files in os.walk(directory):
+            for file in files:
+                if file.endswith('.mp4'):
+                    video_path = os.path.join(root, file)
+                    compute_t_ssim(video_path)
 
-    # print("\n")
+    print("\n")
 
-    # # Iterate through videos in the generated directory for FVD
-    # for root, _, files in os.walk(final_data):
-    #     for file in files:
-    #         if file.endswith('.mp4'):
-    #             # Construct the relative path of the file
-    #             relative_path = os.path.relpath(root, final_data)
+    # Iterate through videos in the generated directory for FVD
+    for root, _, files in os.walk(final_data):
+        for file in files:
+            if file.endswith('.mp4'):
+                # Construct the relative path of the file
+                relative_path = os.path.relpath(root, final_data)
 
-    #             # Construct paths for the original and generated video files
-    #             original_video_path = os.path.join(original_data, relative_path, file)
-    #             processed_video_path = os.path.join(root, file)
+                # Construct paths for the original and generated video files
+                original_video_path = os.path.join(original_data, relative_path, file)
+                processed_video_path = os.path.join(root, file)
 
-    #             # Check if the corresponding original video exists
-    #             if os.path.exists(original_video_path):
-    #                 compute_fvd(original_video_path, processed_video_path)
-    #             else:
-    #                 print(f"Original video not found for: {processed_video_path}")
-    # print("\n")
+                # Check if the corresponding original video exists
+                if os.path.exists(original_video_path):
+                    compute_fvd(original_video_path, processed_video_path)
+                else:
+                    print(f"Original video not found for: {processed_video_path}")
+    print("\n")
 
-    # # Iterate through videos in the generated directory
-    # for root, _, files in os.walk(img2_output_data):
-    #     for file in files:
-    #         if file.endswith('.mp4'):
-    #             # Construct paths for the original and generated video files
-    #             relative_path = os.path.relpath(root, img2_output_data)
-    #             original_video_path = os.path.join(original_data, relative_path, file)
-    #             processed_video_path = os.path.join(root, file)
+    # Iterate through videos in the generated directory
+    for root, _, files in os.walk(img2_output_data):
+        for file in files:
+            if file.endswith('.mp4'):
+                # Construct paths for the original and generated video files
+                relative_path = os.path.relpath(root, img2_output_data)
+                original_video_path = os.path.join(original_data, relative_path, file)
+                processed_video_path = os.path.join(root, file)
 
-    #             # Check if the corresponding original video exists
-    #             if os.path.exists(original_video_path):
-    #                 compute_fvd(original_video_path, processed_video_path)
-    #             else:
-    #                 logger.error(f"Original video not found for: {processed_video_path}")
+                # Check if the corresponding original video exists
+                if os.path.exists(original_video_path):
+                    compute_fvd(original_video_path, processed_video_path)
+                else:
+                    logger.error(f"Original video not found for: {processed_video_path}")
 
-    # print("\n")
+    print("\n")
 
-    # # Iterate through videos in the generated directory
-    # for root, _, files in os.walk(img2_output_data):
-    #     for file in files:
-    #         if file.endswith('.mp4'):
-    #             # Construct the relative path of the file
-    #             relative_path = os.path.relpath(root, img2_output_data)
+    # Iterate through videos in the generated directory
+    for root, _, files in os.walk(img2_output_data):
+        for file in files:
+            if file.endswith('.mp4'):
+                # Construct the relative path of the file
+                relative_path = os.path.relpath(root, img2_output_data)
 
-    #             # Construct paths for the original and generated video files
-    #             original_video_path = os.path.join(original_data, relative_path, file)
-    #             processed_video_path = os.path.join(root, file)
+                # Construct paths for the original and generated video files
+                original_video_path = os.path.join(original_data, relative_path, file)
+                processed_video_path = os.path.join(root, file)
 
-    #             # Check if the corresponding original video exists
-    #             if os.path.exists(original_video_path):
-    #                 # Calculate PSNR
-    #                 calculate_video_psnr(original_video_path, processed_video_path)
-    #             else:
-    #                 print(f"Original video not found for: {processed_video_path}")
+                # Check if the corresponding original video exists
+                if os.path.exists(original_video_path):
+                    # Calculate PSNR
+                    calculate_video_psnr(original_video_path, processed_video_path)
+                else:
+                    print(f"Original video not found for: {processed_video_path}")
 
-    # # Iterate through videos in the final_data directory
-    # for root, _, files in os.walk(final_data):
-    #     for file in files:
-    #         if file.endswith('.mp4'):
-    #             # Construct the relative path of the file
-    #             relative_path = os.path.relpath(root, final_data)
+    # Iterate through videos in the final_data directory
+    for root, _, files in os.walk(final_data):
+        for file in files:
+            if file.endswith('.mp4'):
+                # Construct the relative path of the file
+                relative_path = os.path.relpath(root, final_data)
 
-    #             # Construct paths for the original and generated video files
-    #             original_video_path = os.path.join(original_data, relative_path, file)
-    #             processed_video_path = os.path.join(root, file)
+                # Construct paths for the original and generated video files
+                original_video_path = os.path.join(original_data, relative_path, file)
+                processed_video_path = os.path.join(root, file)
 
-    #             # Check if the corresponding original video exists
-    #             if os.path.exists(original_video_path):
-    #                 # Calculate PSNR
-    #                 calculate_video_psnr(original_video_path, processed_video_path)
-    #             else:
-    #                 logger.error(f"Original video not found for: {processed_video_path}")
+                # Check if the corresponding original video exists
+                if os.path.exists(original_video_path):
+                    # Calculate PSNR
+                    calculate_video_psnr(original_video_path, processed_video_path)
+                else:
+                    logger.error(f"Original video not found for: {processed_video_path}")
 
-    # print("\n")
+    print("\n")
 
-    # # Iterate through videos in the final_data directory
-    # for root, _, files in os.walk(final_data):
-    #     for file in files:
-    #         if file.endswith('.mp4'):
-    #             # Construct the relative path of the file
-    #             relative_path = os.path.relpath(root, final_data)
+    # Iterate through videos in the final_data directory
+    for root, _, files in os.walk(final_data):
+        for file in files:
+            if file.endswith('.mp4'):
+                # Construct the relative path of the file
+                relative_path = os.path.relpath(root, final_data)
 
-    #             # Construct paths for the original and generated video files
-    #             original_video_path = os.path.join(original_data, relative_path, file)
-    #             processed_video_path = os.path.join(root, file)
+                # Construct paths for the original and generated video files
+                original_video_path = os.path.join(original_data, relative_path, file)
+                processed_video_path = os.path.join(root, file)
 
-    #             # Check if the corresponding original video exists
-    #             if os.path.exists(original_video_path):
-    #                 # Calculate VPQ
-    #                 calculate_vpq(original_video_path, processed_video_path)
-    #             else:
-    #                 logger.error(f"Original video not found for: {processed_video_path}")
+                # Check if the corresponding original video exists
+                if os.path.exists(original_video_path):
+                    # Calculate VPQ
+                    calculate_vpq(original_video_path, processed_video_path)
+                else:
+                    logger.error(f"Original video not found for: {processed_video_path}")
 
-    # print("\n")
+    print("\n")
 
-    # # Iterate through videos in the img2_output_data directory again
-    # for root, _, files in os.walk(img2_output_data):
-    #     for file in files:
-    #         if file.endswith('.mp4'):
-    #             # Construct the relative path of the file
-    #             relative_path = os.path.relpath(root, img2_output_data)
+    # Iterate through videos in the img2_output_data directory again
+    for root, _, files in os.walk(img2_output_data):
+        for file in files:
+            if file.endswith('.mp4'):
+                # Construct the relative path of the file
+                relative_path = os.path.relpath(root, img2_output_data)
 
-    #             # Construct paths for the original and generated video files
-    #             original_video_path = os.path.join(original_data, relative_path, file)
-    #             processed_video_path = os.path.join(root, file)
+                # Construct paths for the original and generated video files
+                original_video_path = os.path.join(original_data, relative_path, file)
+                processed_video_path = os.path.join(root, file)
 
-    #             # Check if the corresponding original video exists
-    #             if os.path.exists(original_video_path):
-    #                 # Calculate VPQ
-    #                 calculate_vpq(original_video_path, processed_video_path)
-    #             else:
-    #                 logger.error(f"Original video not found for: {processed_video_path}")
+                # Check if the corresponding original video exists
+                if os.path.exists(original_video_path):
+                    # Calculate VPQ
+                    calculate_vpq(original_video_path, processed_video_path)
+                else:
+                    logger.error(f"Original video not found for: {processed_video_path}")
 
     folder_a_name = "Original"  # The constant folder
 
