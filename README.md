@@ -49,11 +49,28 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Results
 
-Pipeline Architecture
-[![Pipeline Architecture](figures/architecture.png)]
+### Pipeline Architecture
 
-Comparison with CycleGAN-turbo 
-[![Comparison with CycleGAN-turbo](figures/compare.png)]
+<div>
+<p align="center">
+<img src='figures/architecture.png' align="center" width=1000px>
+</p>
+</div>
 
-Comparison for day to night translation with other trained models 
-[![Comparison for day to night translation with other trained models ](figures/compare_merged.png)]
+
+### Comparison with CycleGAN-turbo 
+
+<div>
+<p align="center">
+<img src='figures/compare.png' align="center" width=1000px>
+</p>
+</div>
+
+
+### Comparison for day-to-night translation with other trained models 
+
+<div>
+<p align="center">
+<img src='figures/compare_merged.png' align="center" width=1000px>
+</p>
+</div>
