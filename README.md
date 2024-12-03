@@ -14,7 +14,7 @@ Tested with Python 3.9.19. To setup the environment run these two commands in a 
 
 Clone the repository
 ```command line
-git clone https://github.com/Shaadalam9/pedestrians-in-youtube.git
+git clone https://github.com/Shaadalam9/traffic-pipeline
 ```
 
 **Step 2:**
