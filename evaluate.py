@@ -518,7 +518,7 @@ def process_directory(directory, file_processor):
 
     Args:
         directory (str): Path to the directory to process.
-        file_processor (function): Function to process each MP4 file. 
+        file_processor (function): Function to process each MP4 file.
             Accepts the arguments (original_video_path, processed_video_path).
     """
     for root, _, files in os.walk(directory):
@@ -542,7 +542,7 @@ def compute_metrics_for_directory(directory, metric_calculator, metric_name):
 
     Args:
         directory (str): Path to the directory to process.
-        metric_calculator (function): Function to compute the metric. 
+        metric_calculator (function): Function to compute the metric.
             Accepts the arguments (original_video_path, processed_video_path).
         metric_name (str): Name of the metric being computed (used for logging).
     """
