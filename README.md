@@ -10,7 +10,7 @@ The code is open-source and free to use. It is aimed for, but not limited to, ac
 ## Citation
 If you use the coupled sim for academic work please cite the following paper:
 
-> Alam, M.S., Martens, M.H., & Bazilinskyy, P. (2025). Deep Learning Approach for Realistic Traffic Video Changes Across Lighting and Weather Conditions. 7th International Conference on Information and Computer Technologies (ICICT). Hilo, Hawaii, USA. 
+> Alam, M.S., Parmar, S.H., Martens, M.H., & Bazilinskyy, P. (2025). Deep Learning Approach for Realistic Traffic Video Changes Across Lighting and Weather Conditions. 7th International Conference on Information and Computer Technologies (ICICT). Hilo, Hawaii, USA. 
 
 ## Getting Started
 Tested with Python 3.9.19. To setup the environment run these two commands in a parent folder of the downloaded repository (replace `/` with `\` and possibly add `--user` if on Windows:
@@ -77,17 +77,12 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 This project utilizes dashcam videos from various locations. The following table lists the video links along with the specific timestamps from which the footage was extracted for the study:
 
-| **Location**        | **Video Link**                                                                                     | **Timestamps**       |
-|---------------------|----------------------------------------------------------------------------------------------------|----------------------|
-| **London (UK)**     |                                                                                                    |                      |
-|                     | [![Day](ReadmeFiles/thumbnail_london_day.png)](https://www.youtube.com/watch?v=QI4_dGvZ5yE)        | 5:00 till 5:20       |
-|                     | [![Night](ReadmeFiles/thumbnail_london_night.png)](https://www.youtube.com/watch?v=mEXVBiT1eAM)    | 22:20 till 22:40     |
-| **Hong Kong**       |                                                                                                    |                      |
-|                     | [![Day](ReadmeFiles/thumbnail_hk_day.png)](https://www.youtube.com/watch?v=ULcuZ3Q02SI)            | 6:20 till 6:40       |
-|                     | [![Night](ReadmeFiles/thumbnail_hk_night.png)](https://www.youtube.com/watch?v=XaR6qEt-BIY)        | 25:40 till 26:00     |
-| **Los Angeles (CA, USA)** |                                                                                              |                      |
-|                     | [![Day](ReadmeFiles/thumbnail_la_day.png)](https://www.youtube.com/watch?v=4uhMg5na888)            | 16:10 till 16:30     |
-|                     | [![Night](ReadmeFiles/thumbnail_la_night.png)](https://www.youtube.com/watch?v=eR5vsN1Lq4E)        | 39:00 till 39:20     |
+| **Location**             | **Day**                                                                                       | **Night**                                                                                     | **Timestamps**         |
+|--------------------------|-----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|------------------------|
+| **London (UK)**          | [![Day](ReadmeFiles/thumbnail_london_day.png)](https://www.youtube.com/watch?v=QI4_dGvZ5yE)   | [![Night](ReadmeFiles/thumbnail_london_night.png)](https://www.youtube.com/watch?v=mEXVBiT1eAM) | 5:00 - 5:20 (Day) <br> 22:20 - 22:40 (Night) |
+| **Hong Kong**            | [![Day](ReadmeFiles/thumbnail_hk_day.png)](https://www.youtube.com/watch?v=ULcuZ3Q02SI)       | [![Night](ReadmeFiles/thumbnail_hk_night.png)](https://www.youtube.com/watch?v=XaR6qEt-BIY)  | 6:20 - 6:40 (Day) <br> 25:40 - 26:00 (Night) |
+| **Los Angeles (CA, USA)**| [![Day](ReadmeFiles/thumbnail_la_day.png)](https://www.youtube.com/watch?v=4uhMg5na888)       | [![Night](ReadmeFiles/thumbnail_la_night.png)](https://www.youtube.com/watch?v=eR5vsN1Lq4E)  | 16:10 - 16:30 (Day) <br> 39:00 - 39:20 (Night) |
+
 
 
 ### Note:
@@ -143,3 +138,5 @@ The following trained models were utilized for the comparison study. The respect
 - The weight model links direct you to the repositories where the pre-trained weights used in this study are available.
 
 
+### Acknowledgement:
+Code derived from [img2img-turbo](https://github.com/GaParmar/img2img-turbo) and [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN)

@@ -1,13 +1,12 @@
 import torch
 import torchvision.transforms as T
-import torchvision.models as models
+import torchvision.models as models  # noqa:F401
 from scipy.linalg import sqrtm
 from PIL import Image
 import timm
 import numpy as np
 import cv2
 from skimage.metrics import structural_similarity as ssim
-from scipy.linalg import sqrtm
 from moviepy.editor import VideoFileClip
 import tensorflow as tf
 import common
@@ -28,6 +27,52 @@ final_data = os.path.join(base_data_folder, "final")
 original_data = os.path.join(base_data_folder, "original")
 img2_output_data = os.path.join(base_data_folder, "img2turbo_output")
 compare_folders = os.path.join(base_data_folder, "compare")
+
+
+def process_video_frames(original_video_path, processed_video_path, frame_processor):
+    """
+    Process frames of a video using a custom frame processor.
+
+    Args:
+        original_video_path (str): Path to the original video.
+        processed_video_path (str): Path to the processed video.
+        frame_processor (function): Function to process a pair of frames.
+                                    Should accept two arguments: (original_frame, processed_frame).
+
+    Returns:
+        list: Results from processing each frame.
+    """
+    original_cap = cv2.VideoCapture(original_video_path)  # type: ignore
+    processed_cap = cv2.VideoCapture(processed_video_path)  # type: ignore
+
+    if not original_cap.isOpened() or not processed_cap.isOpened():
+        logger.error("Error: Could not open video files.")
+        return []
+
+    results = []
+    ret, original_frame = original_cap.read()
+    if not ret:
+        logger.error("Error: Could not read frames from the original video.")
+        return []
+
+    target_size = (original_frame.shape[1], original_frame.shape[0])  # (width, height)
+
+    original_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
+    processed_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
+
+    while True:
+        ret1, original_frame = original_cap.read()
+        ret2, processed_frame = processed_cap.read()
+        if not ret1 or not ret2:
+            break
+
+        processed_frame_resized = cv2.resize(processed_frame, target_size)  # type: ignore
+        result = frame_processor(original_frame, processed_frame_resized)
+        results.append(result)
+
+    original_cap.release()
+    processed_cap.release()
+    return results
 
 
 # --------------------------
@@ -203,7 +248,10 @@ def calculate_psnr(frame1, frame2):
 # Calculate PSNR for an entire video
 def calculate_video_psnr(original_video_path, processed_video_path):
     """
-    Calculate the average PSNR for an entire video by comparing frames.
+    Calculate the average PSNR (Peak Signal-to-Noise Ratio) for an entire video.
+
+    This function compares frames from the original video and processed video,
+    calculating the PSNR value for each pair of frames and then averaging them.
 
     Args:
         original_video_path (str): Path to the original video.
@@ -212,41 +260,10 @@ def calculate_video_psnr(original_video_path, processed_video_path):
     Returns:
         None: Logs the average PSNR value for the video.
     """
-    original_cap = cv2.VideoCapture(original_video_path)  # type: ignore
-    processed_cap = cv2.VideoCapture(processed_video_path)  # type: ignore
+    def psnr_processor(original_frame, processed_frame):
+        return calculate_psnr(original_frame, processed_frame)
 
-    if not original_cap.isOpened() or not processed_cap.isOpened():
-        logger.info("Error: Could not open video files.")
-        return
-
-    psnr_values = []
-
-    # Get the resolution of the original video
-    ret, original_frame = original_cap.read()
-    if not ret:
-        logger.error("Error: Could not read frames from the original video.")
-        return
-
-    target_size = (original_frame.shape[1], original_frame.shape[0])  # (width, height)
-
-    # Reset the video captures to the beginning
-    original_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
-    processed_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
-
-    while True:
-        ret1, original_frame = original_cap.read()
-        ret2, processed_frame = processed_cap.read()
-        if not ret1 or not ret2:
-            break
-
-        # Resize processed frame to match the original frame size
-        processed_frame_resized = cv2.resize(processed_frame, target_size)  # type: ignore
-
-        psnr_value = calculate_psnr(original_frame, processed_frame_resized)
-        psnr_values.append(psnr_value)
-
-    original_cap.release()
-    processed_cap.release()
+    psnr_values = process_video_frames(original_video_path, processed_video_path, psnr_processor)
 
     if psnr_values:
         average_psnr = np.mean(psnr_values)
@@ -286,56 +303,35 @@ def calculate_vpq(original_video_path, processed_video_path):
     """
     Compute Video Perceptual Quality (VPQ) as a combination of PSNR and SSIM.
 
+    This function compares frames from the original and processed videos,
+    calculating both PSNR and SSIM for each frame pair, and then averaging the results.
+
     Args:
         original_video_path (str): Path to the original video.
         processed_video_path (str): Path to the processed video.
 
     Returns:
-        None: Logs the VPQ score.
+        None: Logs the VPQ score for the video.
     """
-    original_cap = cv2.VideoCapture(original_video_path)  # type: ignore
-    processed_cap = cv2.VideoCapture(processed_video_path)  # type: ignore
+    def vpq_processor(original_frame, processed_frame):
+        """
+        A custom processor to calculate both PSNR and SSIM for a pair of frames.
 
-    if not original_cap.isOpened() or not processed_cap.isOpened():
-        logger.error("Error: Could not open video files.")
-        return
+        Args:
+            original_frame (numpy.ndarray): The original video frame.
+            processed_frame (numpy.ndarray): The processed video frame.
 
-    ssim_values = []
-    psnr_values = []
+        Returns:
+            tuple: A tuple containing the SSIM and PSNR values.
+        """
+        ssim_value = calculate_ssim(original_frame, processed_frame)
+        psnr_value = calculate_psnr(original_frame, processed_frame)
+        return (ssim_value, psnr_value)
 
-    # Get the resolution of the original video
-    ret, original_frame = original_cap.read()
-    if not ret:
-        logger.error("Error: Could not read frames from the original video.")
-        return
+    results = process_video_frames(original_video_path, processed_video_path, vpq_processor)
 
-    target_size = (original_frame.shape[1], original_frame.shape[0])  # (width, height)
-
-    # Reset the video captures to the beginning
-    original_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
-    processed_cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # type: ignore
-
-    while True:
-        ret1, original_frame = original_cap.read()
-        ret2, processed_frame = processed_cap.read()
-        if not ret1 or not ret2:
-            break
-
-        # Resize processed frame to match the original frame size
-        processed_frame_resized = cv2.resize(processed_frame, target_size)  # type: ignore
-
-        # Calculate SSIM
-        ssim_value = calculate_ssim(original_frame, processed_frame_resized)
-        ssim_values.append(ssim_value)
-
-        # Calculate PSNR
-        psnr_value = calculate_psnr(original_frame, processed_frame_resized)
-        psnr_values.append(psnr_value)
-
-    original_cap.release()
-    processed_cap.release()
-
-    if ssim_values and psnr_values:
+    if results:
+        ssim_values, psnr_values = zip(*results)
         average_ssim = np.mean(ssim_values)
         average_psnr = np.mean(psnr_values)
         vpq_score = (average_ssim + average_psnr) / 2
