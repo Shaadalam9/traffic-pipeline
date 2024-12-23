@@ -7,15 +7,28 @@ from logmod import logs
 import common
 import sys
 
+# Initialize logging
 logs(show_level="info", show_color=True)
 logger = CustomLogger(__name__)  # use custom logger
-original_data = common.get_configs("data_original")
-img2_output_data = common.get_configs("data_img2_output")
-final_data = common.get_configs("data_final")
+
+# Load the base data folder from the config
+base_data_folder = common.get_configs("data")
+
+# Define paths using os.path.join
+final_data = os.path.join(base_data_folder, "final")
+original_data = os.path.join(base_data_folder, "original")
+img2_output_data = os.path.join(base_data_folder, "img2turbo_output")
+compare_folders = os.path.join(base_data_folder, "compare")
 transformation = common.get_configs("transformation")
 
 
 def video_to_frames(video_path):
+    """
+    Extracts frames from a video and saves them as image files.
+
+    Args:
+        video_path (str): Path to the video file to process.
+    """
     # Get the directory where the video is located
     output_folder = os.path.dirname(video_path)
 
@@ -46,6 +59,12 @@ def video_to_frames(video_path):
 
 
 def process_videos_in_directory(root_folder):
+    """
+    Processes all video files in a directory by extracting their frames.
+
+    Args:
+        root_folder (str): Path to the root directory containing video files.
+    """
     # Walk through all subdirectories and files
     for dirpath, _, filenames in os.walk(root_folder):
         for file in filenames:
@@ -58,6 +77,13 @@ def process_videos_in_directory(root_folder):
 
 
 def process_all_folders(frame_folder, fps=30):
+    """
+    Converts a sequence of image frames in a folder into a video.
+
+    Args:
+        frame_folder (str): Path to the folder containing image frames.
+        fps (int): Frames per second for the output video.
+    """
     # Get the list of all frames sorted by filename (assumes sequential naming)
     frames = sorted([f for f in os.listdir(frame_folder) if f.endswith('.png')])
 
@@ -86,10 +112,17 @@ def process_all_folders(frame_folder, fps=30):
 
     # Release the video writer object
     out.release()
-    print(f"Video saved as {output_video_path}")
+    logger.info(f"Video saved as {output_video_path}")
 
 
 def frames_to_video(root_folder, fps=30):
+    """
+    Processes all directories in a root folder containing image frames and creates videos.
+
+    Args:
+        root_folder (str): Path to the root directory containing image frames.
+        fps (int): Frames per second for the output videos.
+    """
     # Walk through all subdirectories and files
     for dirpath, _, filenames in os.walk(root_folder):
         # Check if the current directory contains any frame files
@@ -99,6 +132,14 @@ def frames_to_video(root_folder, fps=30):
 
 
 def run_inference_on_frames(base_input_dir, base_output_dir, model_name=transformation):
+    """
+    Runs inference on image frames using a specified model.
+
+    Args:
+        base_input_dir (str): Path to the input directory containing image frames.
+        base_output_dir (str): Path to the output directory for inference results.
+        model_name (str): Name of the model to use for inference.
+    """
     # Traverse through all subdirectories and files in base_input_dir
     for root, dirs, files in os.walk(base_input_dir):
         for file in files:
@@ -151,6 +192,13 @@ def run_inference_on_frames(base_input_dir, base_output_dir, model_name=transfor
 
 
 def download_file(url, output_dir):
+    """
+    Downloads a file from a given URL and saves it to the specified directory.
+
+    Args:
+        url (str): URL of the file to download.
+        output_dir (str): Path to the directory where the file will be saved.
+    """
     # Ensure the output directory exists
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -173,6 +221,15 @@ def download_file(url, output_dir):
 
 
 def run_realesrgan_inference(model_name, input_dir, output_base_dir, face_enhance=False):
+    """
+    Runs Real-ESRGAN inference on image files for super-resolution.
+
+    Args:
+        model_name (str): Name of the model to use for inference.
+        input_dir (str): Path to the directory containing input images.
+        output_base_dir (str): Path to the directory for saving output images.
+        face_enhance (bool): Whether to enable face enhancement during inference.
+    """
     # Traverse through all subdirectories and files in input_dir
     for root, dirs, files in os.walk(input_dir):
         for file in files:

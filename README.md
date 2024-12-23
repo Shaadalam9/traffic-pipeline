@@ -1,13 +1,16 @@
 # traffic-pipeline
 
-[**Paper**](https://shaadalam9.github.io/publications/traffic-pipeline)
-
 ## Overview
-Recent advances in GAN-based architectures haveled to innovative methods for image transformation. The lack ofdiverse environmental data, such as different lighting conditionsand seasons in public data, prevents researchers from effectivelystudying the difference in driver and road user behaviourunder varying conditions. This study introduces a deep learningpipeline that combines CycleGAN-turbo and Real-ESRGAN toimprove video transformations of the traffic scene. Evaluatedusing dashcam videos from London, Hong Kong, and LosAngeles, our pipeline shows a 7.97% improvement in T-SIMMfor temporal consistency compared to CycleGAN-turbo for night-to-day transformation for Hong Kong. PSNR and VPQ scoresare comparable, but the pipeline performs better in DINOstructure similarity and KL divergence, with up to 153.49%better structural fidelity in Hong Kong compared to Pix2Pixand 107.32% better compared to ToDayGAN. This approachdemonstrates better realism and temporal coherence in day-to-night, night-to-day, and clear-to-rainy transitions.
+Recent advances in GAN-based architectures haveled to innovative methods for image transformation. The lack of diverse environmental data, such as different lighting conditionsand seasons in public data, prevents researchers from effectively studying the difference in driver and road user behaviourunder varying conditions. This study introduces a deep learning pipeline that combines CycleGAN-turbo and Real-ESRGAN to improve video transformations of the traffic scene. Evaluated using dashcam videos from London, Hong Kong, and LosAngeles, our pipeline shows a 7.97% improvement in T-SIMM for temporal consistency compared to CycleGAN-turbo for night-to-day transformation for Hong Kong. PSNR and VPQ scoresare comparable, but the pipeline performs better in DINO structure similarity and KL divergence, with up to 153.49% better structural fidelity in Hong Kong compared to Pix2Pix and 107.32% better compared to ToDayGAN. This approach demonstrates better realism and temporal coherence in day-to-night, night-to-day, and clear-to-rainy transitions.
 
 
 ## Usage of the code
 The code is open-source and free to use. It is aimed for, but not limited to, academic research. We welcome forking of this repository, pull requests, and any contributions in the spirit of open science and open-source code 😍😄 For inquiries about collaboration, you may contact Md Shadab Alam (md_shadab_alam@outlook.com) or Pavlo Bazilinskyy (pavlo.bazilinskyy@gmail.com).
+
+## Citation
+If you use the coupled sim for academic work please cite the following paper:
+
+> Alam, M.S., Martens, M.H., & Bazilinskyy, P. (2025). Deep Learning Approach for Realistic Traffic Video Changes Across Lighting and Weather Conditions. 7th International Conference on Information and Computer Technologies (ICICT). Hilo, Hawaii, USA. 
 
 ## Getting Started
 Tested with Python 3.9.19. To setup the environment run these two commands in a parent folder of the downloaded repository (replace `/` with `\` and possibly add `--user` if on Windows:
@@ -45,6 +48,27 @@ Install dependencies
 pip install -r requirements.txt
 ```
 
+**Step 5:**
+
+Download the supplementary material from [4TU Research Data](https://doi.org/10.4121/80c664cb-a4b5-4eb1-bc1c-666349b1b927) and save them in the current folder.
+
+**Step 6:**
+
+Run the main.py script
+```command line
+python3 main.py
+```
+
+### Configuration of project
+Configuration of the project needs to be defined in `traffic-pipeline/config`. Please use the `default.config` file for the required structure of the file. If no custom config file is provided, `default.config` is used. The config file has the following parameters:
+- **`data`**: Specifies the location of the video files.
+- **`transformation`**: Defines the type of transformation to apply.  
+  - **Options**:  
+    1. `day_to_night`: Convert daytime images to nighttime.  
+    2. `night_to_day`: Convert nighttime images to daytime.  
+    3. `style_transfer`: Apply a style transfer transformation.  
+- **`plotly_template`**: Template used to style graphs in the analysis (e.g., `plotly_white`, `plotly_dark`).
+
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
@@ -53,14 +77,18 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 This project utilizes dashcam videos from various locations. The following table lists the video links along with the specific timestamps from which the footage was extracted for the study:
 
-| **Location**        | **Video Link**                                                                 | **Timestamps**       |
-|---------------------|------------------------------------------------------------------------------|----------------------|
-| **London (UK)**     | [Day](https://www.youtube.com/watch?v=QI4_dGvZ5yE)                      | 5:00 till 5:20       |
-|                     | [Night](https://www.youtube.com/watch?v=mEXVBiT1eAM)                      | 22:20 till 22:40     |
-| **Hong Kong**       | [Day](https://www.youtube.com/watch?v=ULcuZ3Q02SI)                      | 6:20 till 6:40       |
-|                     | [Night](https://www.youtube.com/watch?v=XaR6qEt-BIY)                      | 25:40 till 26:00     |
-| **Los Angeles (CA, USA)** | [Day](https://www.youtube.com/watch?v=4uhMg5na888)                 | 16:10 till 16:30     |
-|                     | [Night](https://www.youtube.com/watch?v=eR5vsN1Lq4E)                      | 39:00 till 39:20     |
+| **Location**        | **Video Link**                                                                                     | **Timestamps**       |
+|---------------------|----------------------------------------------------------------------------------------------------|----------------------|
+| **London (UK)**     |                                                                                                    |                      |
+|                     | [![Day](ReadmeFiles/thumbnail_london_day.png)](https://www.youtube.com/watch?v=QI4_dGvZ5yE)        | 5:00 till 5:20       |
+|                     | [![Night](ReadmeFiles/thumbnail_london_night.png)](https://www.youtube.com/watch?v=mEXVBiT1eAM)    | 22:20 till 22:40     |
+| **Hong Kong**       |                                                                                                    |                      |
+|                     | [![Day](ReadmeFiles/thumbnail_hk_day.png)](https://www.youtube.com/watch?v=ULcuZ3Q02SI)            | 6:20 till 6:40       |
+|                     | [![Night](ReadmeFiles/thumbnail_hk_night.png)](https://www.youtube.com/watch?v=XaR6qEt-BIY)        | 25:40 till 26:00     |
+| **Los Angeles (CA, USA)** |                                                                                              |                      |
+|                     | [![Day](ReadmeFiles/thumbnail_la_day.png)](https://www.youtube.com/watch?v=4uhMg5na888)            | 16:10 till 16:30     |
+|                     | [![Night](ReadmeFiles/thumbnail_la_night.png)](https://www.youtube.com/watch?v=eR5vsN1Lq4E)        | 39:00 till 39:20     |
+
 
 ### Note:
 - The timestamps indicate the portion of the video used in the study.
@@ -71,7 +99,7 @@ This project utilizes dashcam videos from various locations. The following table
 
 <div>
 <p align="center">
-<img src='figures/architecture.png' align="center" width=1000px>
+<img src='ReadmeFiles/architecture.png' align="center" width=1000px>
 </p>
 </div>
 
@@ -80,7 +108,7 @@ This project utilizes dashcam videos from various locations. The following table
 
 <div>
 <p align="center">
-<img src='figures/compare.png' align="center" width=1000px>
+<img src='ReadmeFiles/compare.png' align="center" width=1000px>
 </p>
 </div>
 
@@ -93,7 +121,7 @@ This project utilizes dashcam videos from various locations. The following table
 
 <div>
 <p align="center">
-<img src='figures/compare_merged.png' align="center" width=1000px>
+<img src='ReadmeFiles/compare_merged.png' align="center" width=1000px>
 </p>
 </div>
 
