@@ -423,7 +423,8 @@ def filter_image_files(file_list, folder_path):
         list: List of valid image filenames.
     """
     valid_extensions = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff'}
-    return [file for file in file_list if file.lower().endswith(tuple(valid_extensions)) and os.path.isfile(os.path.join(folder_path, file))]
+    return [file for file in file_list if file.lower().endswith(tuple(
+        valid_extensions)) and os.path.isfile(os.path.join(folder_path, file))]
 
 
 def match_files_by_basename(folder_a_files, folder_b_files):
@@ -511,138 +512,78 @@ def compare_folders_with_others(parent_dir, folder_a_name):
     return all_results
 
 
+def process_directory(directory, file_processor):
+    """
+    Process all MP4 video files in the specified directory and apply the provided processor function.
+
+    Args:
+        directory (str): Path to the directory to process.
+        file_processor (function): Function to process each MP4 file. 
+            Accepts the arguments (original_video_path, processed_video_path).
+    """
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.mp4'):
+                # Define paths for original and processed videos
+                relative_path = os.path.relpath(root, directory)
+                original_video_path = os.path.join(original_data, relative_path, file)
+                processed_video_path = os.path.join(root, file)
+
+                # Call the processor function if the original video exists
+                if os.path.exists(original_video_path):
+                    file_processor(original_video_path, processed_video_path)
+                else:
+                    logger.error(f"Original video not found for: {processed_video_path}")
+
+
+def compute_metrics_for_directory(directory, metric_calculator, metric_name):
+    """
+    Compute a specific metric (e.g., PSNR, VPQ) for all MP4 videos in the directory.
+
+    Args:
+        directory (str): Path to the directory to process.
+        metric_calculator (function): Function to compute the metric. 
+            Accepts the arguments (original_video_path, processed_video_path).
+        metric_name (str): Name of the metric being computed (used for logging).
+    """
+    logger.info(f"Computing {metric_name} for videos in {directory}")
+    process_directory(directory, metric_calculator)
+
+
 # ---------------------------
 # Main Execution Block
 # ---------------------------
 if __name__ == "__main__":
     logger.info("Analysis started")
 
-    # Process all MP4 videos in the final_data and img2_output_data directories to compute T-SSIM
+    # Compute T-SSIM for all MP4 videos in final_data and img2_output_data
     for directory in [final_data, img2_output_data]:
-        for root, _, files in os.walk(directory):
-            for file in files:
-                if file.endswith('.mp4'):
-                    video_path = os.path.join(root, file)
-                    compute_t_ssim(video_path)
+        logger.info(f"Computing T-SSIM for videos in {directory}")
+        process_directory(directory, lambda _, video_path: compute_t_ssim(video_path))
 
     print("\n")
 
-    # Calculate FVD (Frechet Video Distance) for videos in the final_data directory
-    for root, _, files in os.walk(final_data):
-        for file in files:
-            if file.endswith('.mp4'):
-                # Define paths for original and generated videos
-                relative_path = os.path.relpath(root, final_data)
-
-                # Construct paths for the original and generated video files
-                original_video_path = os.path.join(original_data, relative_path, file)
-                processed_video_path = os.path.join(root, file)
-
-                # If the original video exists, compute FVD
-                if os.path.exists(original_video_path):
-                    compute_fvd(original_video_path, processed_video_path)
-                else:
-                    logger.error(f"Original video not found for: {processed_video_path}")
-    print("\n")
-
-    # Compute FVD for videos in the img2_output_data directory
-    for root, _, files in os.walk(img2_output_data):
-        for file in files:
-            if file.endswith('.mp4'):
-                # Define paths for original and generated videos
-                relative_path = os.path.relpath(root, img2_output_data)
-                original_video_path = os.path.join(original_data, relative_path, file)
-                processed_video_path = os.path.join(root, file)
-
-                # If the original video exists, compute FVD
-                if os.path.exists(original_video_path):
-                    compute_fvd(original_video_path, processed_video_path)
-                else:
-                    logger.error(f"Original video not found for: {processed_video_path}")
+    # Calculate FVD for videos in final_data and img2_output_data
+    for directory in [final_data, img2_output_data]:
+        compute_metrics_for_directory(directory, compute_fvd, "FVD")
 
     print("\n")
 
-    # Calculate PSNR for videos in final_data
-    for root, _, files in os.walk(img2_output_data):
-        for file in files:
-            if file.endswith('.mp4'):
-                # Construct the relative path of the file
-                relative_path = os.path.relpath(root, img2_output_data)
-
-                # Construct paths for the original and generated video files
-                original_video_path = os.path.join(original_data, relative_path, file)
-                processed_video_path = os.path.join(root, file)
-
-                # Compute PSNR if original video is available
-                if os.path.exists(original_video_path):
-                    # Calculate PSNR
-                    calculate_video_psnr(original_video_path, processed_video_path)
-                else:
-                    logger.error(f"Original video not found for: {processed_video_path}")
-
-    # Calculate PSNR for videos in final_data
-    for root, _, files in os.walk(final_data):
-        for file in files:
-            if file.endswith('.mp4'):
-                # Construct the relative path of the file
-                relative_path = os.path.relpath(root, final_data)
-
-                # Construct paths for the original and generated video files
-                original_video_path = os.path.join(original_data, relative_path, file)
-                processed_video_path = os.path.join(root, file)
-
-                # Compute PSNR if original video is available
-                if os.path.exists(original_video_path):
-                    # Calculate PSNR
-                    calculate_video_psnr(original_video_path, processed_video_path)
-                else:
-                    logger.error(f"Original video not found for: {processed_video_path}")
+    # Calculate PSNR for videos in final_data and img2_output_data
+    for directory in [final_data, img2_output_data]:
+        compute_metrics_for_directory(directory, calculate_video_psnr, "PSNR")
 
     print("\n")
 
-    # Calculate VPQ for videos in img2_output_data
-    for root, _, files in os.walk(final_data):
-        for file in files:
-            if file.endswith('.mp4'):
-                # Construct the relative path of the file
-                relative_path = os.path.relpath(root, final_data)
-
-                # Construct paths for the original and generated video files
-                original_video_path = os.path.join(original_data, relative_path, file)
-                processed_video_path = os.path.join(root, file)
-
-                # Compute VPQ if original video is available
-                if os.path.exists(original_video_path):
-                    # Calculate VPQ
-                    calculate_vpq(original_video_path, processed_video_path)
-                else:
-                    logger.error(f"Original video not found for: {processed_video_path}")
+    # Calculate VPQ for videos in final_data and img2_output_data
+    for directory in [final_data, img2_output_data]:
+        compute_metrics_for_directory(directory, calculate_vpq, "VPQ")
 
     print("\n")
-
-    # Calculate VPQ for videos in img2_output_data
-    for root, _, files in os.walk(img2_output_data):
-        for file in files:
-            if file.endswith('.mp4'):
-                # Construct the relative path of the file
-                relative_path = os.path.relpath(root, img2_output_data)
-
-                # Construct paths for the original and generated video files
-                original_video_path = os.path.join(original_data, relative_path, file)
-                processed_video_path = os.path.join(root, file)
-
-                # Compute VPQ if original video is available
-                if os.path.exists(original_video_path):
-                    # Calculate VPQ
-                    calculate_vpq(original_video_path, processed_video_path)
-                else:
-                    logger.error(f"Original video not found for: {processed_video_path}")
 
     # Perform DINO-based comparisons for a specified folder (Original) against others
-
+    logger.info("Performing DINO-based comparisons")
     all_comparisons = compare_folders_with_others(compare_folders, "Original")
-
-    # Log the results of the comparisons
     for folder_b_name, results in all_comparisons.items():
         logger.info(f"\nComparing Original with {folder_b_name}:")
         for file_name, distance in results:

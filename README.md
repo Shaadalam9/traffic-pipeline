@@ -69,9 +69,6 @@ Configuration of the project needs to be defined in `traffic-pipeline/config`. P
     3. `style_transfer`: Apply a style transfer transformation.  
 - **`plotly_template`**: Template used to style graphs in the analysis (e.g., `plotly_white`, `plotly_dark`).
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## Data
 ### Dashcam Videos Used in the Study
 
@@ -137,6 +134,8 @@ The following trained models were utilized for the comparison study. The respect
 - Each model's paper outlines the theoretical framework and methodology behind its functionality.
 - The weight model links direct you to the repositories where the pre-trained weights used in this study are available.
 
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ### Acknowledgement:
 Code derived from [img2img-turbo](https://github.com/GaParmar/img2img-turbo) and [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN)
