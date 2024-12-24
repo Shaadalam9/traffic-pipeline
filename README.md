@@ -10,10 +10,10 @@ The code is open-source and free to use. It is aimed for, but not limited to, ac
 ## Citation
 If you use the coupled sim for academic work please cite the following paper:
 
-> Alam, M.S., Parmar, S.H., Martens, M.H., & Bazilinskyy, P. (2025). Deep Learning Approach for Realistic Traffic Video Changes Across Lighting and Weather Conditions. 7th International Conference on Information and Computer Technologies (ICICT). Hilo, Hawaii, USA. 
+> Alam, M.S., Parmar, S.H., Martens, M.H., & Bazilinskyy, P. (2025). Deep Learning Approach for Realistic Traffic Video Changes Across Lighting and Weather Conditions. 8th International Conference on Information and Computer Technologies (ICICT). Hilo, Hawaii, USA. 
 
 ## Getting Started
-Tested with Python 3.9.19. To setup the environment run these two commands in a parent folder of the downloaded repository (replace `/` with `\` and possibly add `--user` if on Windows:
+Tested with Python 3.9.20. To setup the environment run these two commands in a parent folder of the downloaded repository (replace `/` with `\` and possibly add `--user` if on Windows:
 
 **Step 1:**
 
@@ -50,7 +50,7 @@ pip install -r requirements.txt
 
 **Step 5:**
 
-Download the supplementary material from [4TU Research Data](https://doi.org/10.4121/80c664cb-a4b5-4eb1-bc1c-666349b1b927) and save them in the current folder.
+Download the supplementary material from [4TU Research Data](https://doi.org/10.4121/ef03b8d5-a25d-4a83-a371-1c0a11c368d3) and save them in the current folder.
 
 **Step 6:**
 
@@ -76,9 +76,9 @@ This project utilizes dashcam videos from various locations. The following table
 
 | **Location**             | **Day**                                                                                       | **Night**                                                                                     | **Timestamps**         |
 |--------------------------|-----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|------------------------|
-| **London (UK)**          | [![Day](ReadmeFiles/thumbnail_london_day.png)](https://www.youtube.com/watch?v=QI4_dGvZ5yE)   | [![Night](ReadmeFiles/thumbnail_london_night.png)](https://www.youtube.com/watch?v=mEXVBiT1eAM) | 5:00 - 5:20 (Day) <br> 22:20 - 22:40 (Night) |
-| **Hong Kong**            | [![Day](ReadmeFiles/thumbnail_hk_day.png)](https://www.youtube.com/watch?v=ULcuZ3Q02SI)       | [![Night](ReadmeFiles/thumbnail_hk_night.png)](https://www.youtube.com/watch?v=XaR6qEt-BIY)  | 6:20 - 6:40 (Day) <br> 25:40 - 26:00 (Night) |
-| **Los Angeles (CA, USA)**| [![Day](ReadmeFiles/thumbnail_la_day.png)](https://www.youtube.com/watch?v=4uhMg5na888)       | [![Night](ReadmeFiles/thumbnail_la_night.png)](https://www.youtube.com/watch?v=eR5vsN1Lq4E)  | 16:10 - 16:30 (Day) <br> 39:00 - 39:20 (Night) |
+| **London (UK)**          | [![Day](ReadmeFiles/thumbnail_london_day.png)](https://youtu.be/QI4_dGvZ5yE?t=300)   | [![Night](ReadmeFiles/thumbnail_london_night.png)](https://youtu.be/mEXVBiT1eAM?t=1340) | 5:00 - 5:20 (Day) <br> 22:20 - 22:40 (Night) |
+| **Hong Kong**            | [![Day](ReadmeFiles/thumbnail_hk_day.png)](https://youtu.be/ULcuZ3Q02SI?t=380)       | [![Night](ReadmeFiles/thumbnail_hk_night.png)](https://youtu.be/XaR6qEt-BIY?t=1540)  | 6:20 - 6:40 (Day) <br> 25:40 - 26:00 (Night) |
+| **Los Angeles (CA, USA)**| [![Day](ReadmeFiles/thumbnail_la_day.png)](https://youtu.be/4uhMg5na888?t=970)       | [![Night](ReadmeFiles/thumbnail_la_night.png)](https://youtu.be/eR5vsN1Lq4E?t=2340)  | 16:10 - 16:30 (Day) <br> 39:00 - 39:20 (Night) |
 
 
 
@@ -122,17 +122,18 @@ This project utilizes dashcam videos from various locations. The following table
 ## Trained Models Used in the Comparison Study
 
 The following trained models were utilized for the comparison study. The respective papers and weight model links are provided below:
-
 | **Model**    | **Paper**                                                                                   | **Weight Model**                                                                                 |
 |--------------|---------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| **CycleGAN** | [Paper](https://arxiv.org/abs/1703.10593)                                                   | [Weight Model](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix)                        |
-| **HEDNGAN**  | [Paper](https://arxiv.org/abs/2309.16351)                                                   | [Weight Model](https://github.com/mohwald/gandtr)                                              |
-| **Pix2Pix**  | [Paper](https://arxiv.org/abs/1611.07004)                                                   | [Weight Model](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix)                        |
-| **ToDayGAN** | [Paper](https://arxiv.org/pdf/1809.09767)                                                   | [Weight Model](https://github.com/AAnoosheh/ToDayGAN)                                          |
+| **CycleGAN** | [Zhu, J. Y., Park, T., Isola, P., & Efros, A. A. (2017). Unpaired image-to-image translation using cycle-consistent adversarial networks. *Proceedings of the IEEE International Conference on Computer Vision*, 2223–2232. DOI: [10.1109/ICCV.2017.244]](https://doi.org/10.1109/ICCV.2017.244)                                                   | [Weight Model](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix)                        |
+| **HEDNGAN**  | [Mohwald, A., Jenicek, T., & Chum, O. (2023). Dark Side Augmentation: Generating Diverse Night Examples for Metric Learning. *Proceedings of the IEEE/CVF International Conference on Computer Vision*, 11153–11163. DOI: [10.1109/ICCV51070.2023.01024]](https://doi.org/10.1109/ICCV51070.2023.01024)                                                   | [Weight Model](https://github.com/mohwald/gandtr)                                              |
+| **Pix2Pix**  | [Isola, P., Zhu, J. Y., Zhou, T., & Efros, A. A. (2017). Image-to-image translation with conditional adversarial networks. *Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition*, 1125–1134. DOI: [10.1109/CVPR.2017.632]](https://doi.org/10.1109/ICRA.2019.8794387)                                                   | [Weight Model](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix)                        |
+| **ToDayGAN** | [Anoosheh, A., Sattler, T., Timofte, R., Pollefeys, M., & Van Gool, L. (2019). Night-to-day image translation for retrieval-based localization. *2019 International Conference on Robotics and Automation (ICRA)*, 5958–5964. DOI: [10.1109/ICRA.2019.8794387]](https://doi.org/10.1109/ICRA.2019.8794387)                                                   | [Weight Model](https://github.com/AAnoosheh/ToDayGAN)                                          |
+                                     |
 
 ### Notes:
 - Each model's paper outlines the theoretical framework and methodology behind its functionality.
 - The weight model links direct you to the repositories where the pre-trained weights used in this study are available.
+- This code requires a CUDA enabled GPU.
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
