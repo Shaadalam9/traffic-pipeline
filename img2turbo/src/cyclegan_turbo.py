@@ -56,13 +56,13 @@ def initialize_unet(rank, return_lora_module_names=False):
         if "bias" in n or "norm" in n: continue  # noqa:E701
         for pattern in l_grep:
             if pattern in n and ("down_blocks" in n or "conv_in" in n):
-                l_target_modules_encoder.append(n.replace(".weight",""))
+                l_target_modules_encoder.append(n.replace(".weight", ""))
                 break
             elif pattern in n and "up_blocks" in n:
-                l_target_modules_decoder.append(n.replace(".weight",""))
+                l_target_modules_decoder.append(n.replace(".weight", ""))
                 break
             elif pattern in n:
-                l_modules_others.append(n.replace(".weight",""))
+                l_modules_others.append(n.replace(".weight", ""))
                 break
     lora_conf_encoder = LoraConfig(r=rank, init_lora_weights="gaussian",
                                    target_modules=l_target_modules_encoder, lora_alpha=rank)
@@ -104,7 +104,7 @@ def initialize_vae(rank=4, return_lora_module_names=False):
     vae.decoder.gamma = 1
     l_vae_target_modules = ["conv1", "conv2", "conv_in", "conv_shortcut",
                             "conv", "conv_out", "skip_conv_1", "skip_conv_2", "skip_conv_3",
-                            "skip_conv_4", "to_k", "to_q", "to_v", "to_out.0",]
+                            "skip_conv_4", "to_k", "to_q", "to_v", "to_out.0", ]
     vae_lora_config = LoraConfig(r=rank, init_lora_weights="gaussian", target_modules=l_vae_target_modules)
     vae.add_adapter(vae_lora_config, adapter_name="vae_skip")
     if return_lora_module_names:
@@ -114,7 +114,8 @@ def initialize_vae(rank=4, return_lora_module_names=False):
 
 
 class CycleGAN_Turbo(torch.nn.Module):
-    def __init__(self, pretrained_name=None, pretrained_path=None, ckpt_folder="checkpoints", lora_rank_unet=8, lora_rank_vae=4):
+    def __init__(self, pretrained_name=None, pretrained_path=None, ckpt_folder="checkpoints",
+                 lora_rank_unet=8, lora_rank_vae=4):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained("stabilityai/sd-turbo", subfolder="tokenizer")
         self.text_encoder = CLIPTextModel.from_pretrained("stabilityai/sd-turbo", subfolder="text_encoder").cuda()
