@@ -140,8 +140,51 @@ def run_inference_on_frames(base_input_dir, base_output_dir, model_name=transfor
         base_output_dir (str): Path to the output directory for inference results.
         model_name (str): Name of the model to use for inference.
     """
+    # Dictionary to map pretrained names to URLs
+    model_urls = {
+        "day_to_night": "https://www.cs.cmu.edu/~img2img-turbo/models/day2night.pkl",
+        "night_to_day": "https://www.cs.cmu.edu/~img2img-turbo/models/night2day.pkl",
+        "clear_to_rainy": "https://www.cs.cmu.edu/~img2img-turbo/models/clear2rainy.pkl",
+        "rainy_to_clear": "https://www.cs.cmu.edu/~img2img-turbo/models/rainy2clear.pkl"
+    }
+
+    # Ensure the model_name is valid
+    if model_name not in model_urls:
+        raise ValueError(f"Invalid model_name '{model_name}'. Valid options are: {list(model_urls.keys())}")
+
+    # Define checkpoints directory
+    checkpoints_dir = "checkpoints"
+    if not os.path.exists(checkpoints_dir):
+        os.makedirs(checkpoints_dir)
+
+    # Get the URL for the specified model_name
+    url = model_urls[model_name]
+
+    # Define the file path to save the model
+    file_path = os.path.join(checkpoints_dir, f"{model_name}.pkl")
+
+    # Download the file if it doesn't already exist
+    if not os.path.exists(file_path):
+        print(f"Downloading {model_name} model...")
+        response = requests.get(url, stream=True)
+        if response.status_code == 200:
+            with open(file_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+            print(f"Model '{model_name}' downloaded and saved to '{file_path}'.")
+        else:
+            raise Exception(f"Failed to download the model. HTTP Status Code: {response.status_code}")
+    else:
+        print(f"Model '{model_name}' already exists at '{file_path}'.")
+
+    # Ensure the target folder exists in base_input_dir
+    target_folder = os.path.join(base_input_dir, model_name)
+    if not os.path.isdir(target_folder):
+        logger.error(f"Folder '{model_name}' does not exist in the input directory '{base_input_dir}'")
+        return
+
     # Traverse through all subdirectories and files in base_input_dir
-    for root, dirs, files in os.walk(base_input_dir):
+    for root, dirs, files in os.walk(target_folder):
         for file in files:
             # Check if the file is an image (e.g., ends with .png, .jpg, etc.)
             if file.endswith(('.png', '.jpg', '.jpeg')):
@@ -230,6 +273,11 @@ def run_realesrgan_inference(model_name, input_dir, output_base_dir, face_enhanc
         output_base_dir (str): Path to the directory for saving output images.
         face_enhance (bool): Whether to enable face enhancement during inference.
     """
+
+    url = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
+    output_dir = os.path.join("realesrgan_main", "weights")  # Folder to save the file
+    download_file(url, output_dir)
+
     # Traverse through all subdirectories and files in input_dir
     for root, dirs, files in os.walk(input_dir):
         for file in files:
@@ -281,10 +329,6 @@ if __name__ == "__main__":
 
     run_inference_on_frames(original_data, img2_output_data)
     frames_to_video(img2_output_data, fps=30)
-
-    url = "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth"
-    output_dir = "realesrgan_main/weights"  # Folder to save the file
-    download_file(url, output_dir)
 
     run_realesrgan_inference('RealESRGAN_x4plus', img2_output_data, final_data, face_enhance=True)
     frames_to_video(final_data, fps=30)

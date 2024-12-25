@@ -1,24 +1,27 @@
-data
-data copy
-weights
-output
-*/.vscode
+# Ignore data directories and files
+data/
+data copy/
 
-# macOS
+# Ignore model weights and output directories
+weights/
+output/
+
+# Ignore editor-specific files and folders
+*/.vscode/
+
+# macOS system files
 **/.DS_Store
 
-# sublime text project files
+# Sublime Text project and workspace files
 *.sublime-project
 *.sublime-workspace
 
-# Python files
-*/__pycache__
+# Ignore Python cache and related files
+*/__pycache__/
 *.pyc
 *.egg-info/
 
-
-# Instance specific files
+# Ignore instance-specific configuration and secrets
 config
 secret
 checkpoints
-config

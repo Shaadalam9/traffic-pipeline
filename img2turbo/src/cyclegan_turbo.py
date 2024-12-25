@@ -50,7 +50,8 @@ def initialize_unet(rank, return_lora_module_names=False):
     unet.requires_grad_(False)
     unet.train()
     l_target_modules_encoder, l_target_modules_decoder, l_modules_others = [], [], []
-    l_grep = ["to_k", "to_q", "to_v", "to_out.0", "conv", "conv1", "conv2", "conv_in", "conv_shortcut", "conv_out", "proj_out", "proj_in", "ff.net.2", "ff.net.0.proj"]
+    l_grep = ["to_k", "to_q", "to_v", "to_out.0", "conv", "conv1", "conv2", "conv_in",
+              "conv_shortcut", "conv_out", "proj_out", "proj_in", "ff.net.2", "ff.net.0.proj"]
     for n, p in unet.named_parameters():
         if "bias" in n or "norm" in n: continue
         for pattern in l_grep:
@@ -94,10 +95,9 @@ def initialize_vae(rank=4, return_lora_module_names=False):
     torch.nn.init.constant_(vae.decoder.skip_conv_4.weight, 1e-5)
     vae.decoder.ignore_skip = False
     vae.decoder.gamma = 1
-    l_vae_target_modules = ["conv1","conv2","conv_in", "conv_shortcut",
-        "conv", "conv_out", "skip_conv_1", "skip_conv_2", "skip_conv_3", 
-        "skip_conv_4", "to_k", "to_q", "to_v", "to_out.0",
-    ]
+    l_vae_target_modules = ["conv1", "conv2", "conv_in", "conv_shortcut",
+                            "conv", "conv_out", "skip_conv_1", "skip_conv_2", "skip_conv_3",
+                            "skip_conv_4", "to_k", "to_q", "to_v", "to_out.0",]
     vae_lora_config = LoraConfig(r=rank, init_lora_weights="gaussian", target_modules=l_vae_target_modules)
     vae.add_adapter(vae_lora_config, adapter_name="vae_skip")
     if return_lora_module_names:

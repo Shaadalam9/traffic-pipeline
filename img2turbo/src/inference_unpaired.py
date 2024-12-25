@@ -10,17 +10,19 @@ from my_utils.training_utils import build_transform
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--input_image', type=str, required=True, help='path to the input image')
-    parser.add_argument('--prompt', type=str, required=False, help='the prompt to be used. It is required when loading a custom model_path.')
+    parser.add_argument('--prompt', type=str, required=False,
+                        help='the prompt to be used. It is required when loading a custom model_path.')
     parser.add_argument('--model_name', type=str, default=None, help='name of the pretrained model to be used')
     parser.add_argument('--model_path', type=str, default=None, help='path to a local model state dict to be used')
     parser.add_argument('--output_dir', type=str, default='output', help='the directory to save the output')
     parser.add_argument('--image_prep', type=str, default='resize_512x512', help='the image preparation method')
-    parser.add_argument('--direction', type=str, default=None, help='the direction of translation. None for pretrained models, a2b or b2a for custom paths.')
+    parser.add_argument('--direction', type=str, default=None,
+                        help='the direction of translation. None for pretrained models, a2b or b2a for custom paths.')
     parser.add_argument('--use_fp16', action='store_true', help='Use Float16 precision for faster inference')
     args = parser.parse_args()
 
     # only one of model_name and model_path should be provided
-    if args.model_name is None != args.model_path is None:
+    if args.model_name is None != args.model_path is None:  # noqa: E711
         raise ValueError('Either model_name or model_path should be provided')
 
     if args.model_path is not None and args.prompt is None:

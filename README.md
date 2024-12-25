@@ -13,7 +13,7 @@ If you use the coupled sim for academic work please cite the following paper:
 > Alam, M.S., Parmar, S.H., Martens, M.H., & Bazilinskyy, P. (2025). Deep Learning Approach for Realistic Traffic Video Changes Across Lighting and Weather Conditions. 8th International Conference on Information and Computer Technologies (ICICT). Hilo, Hawaii, USA. 
 
 ## Getting Started
-Tested with Python 3.9.20. To setup the environment run these two commands in a parent folder of the downloaded repository (replace `/` with `\` and possibly add `--user` if on Windows:
+Tested with Python 3.9.19. To setup the environment run these two commands in a parent folder of the downloaded repository (replace `/` with `\` and possibly add `--user` if on Windows:
 
 **Step 1:**
 
