@@ -105,8 +105,7 @@ This project utilizes dashcam videos from various locations. The following table
 </div>
 
 #### CycleGAN-turbo Trained Model
-- **Paper**: [CycleGAN-turbo: A Faster Approach to Image-to-Image Translation](https://arxiv.org/abs/2403.12036)
-- **Code Repository**: [GitHub - img2img-turbo](https://github.com/GaParmar/img2img-turbo)
+Parmar, G., Park, T., Narasimhan, S., & Zhu, J. Y. (2024). One-step image translation with text-to-image models. arXiv preprint. DOI: [10.48550/arXiv.2403.12036](https://doi.org/10.48550/arXiv.2403.12036)
 
 
 ### Comparison for Day-to-Night Translation with Other Trained Models
@@ -139,4 +138,7 @@ The following trained models were utilized for the comparison study. The respect
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ### Acknowledgement:
-Code derived from [img2img-turbo](https://github.com/GaParmar/img2img-turbo) and [Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN)
+The code for this repository is inspired by the following works:
+
+1. Parmar, G., Park, T., Narasimhan, S., & Zhu, J. Y. (2024). One-step image translation with text-to-image models. arXiv preprint. DOI: [10.48550/arXiv.2403.12036](https://doi.org/10.48550/arXiv.2403.12036)
+2. Wang, X., Xie, L., Dong, C., & Shan, Y. (2021). Real-esrgan: Training real-world blind super-resolution with pure synthetic data. In Proceedings of the IEEE/CVF international conference on computer vision (pp. 1905-1914). DOI: [10.1109/ICCVW54120.2021.00217](https://doi.org/10.1109/ICCVW54120.2021.00217)
