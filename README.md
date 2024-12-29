@@ -8,7 +8,7 @@ Recent advances in GAN-based architectures have led to innovative methods for im
 The code is open-source and free to use. It is aimed for, but not limited to, academic research. We welcome forking of this repository, pull requests, and any contributions in the spirit of open science and open-source code 😍😄 For inquiries about collaboration, you may contact Md Shadab Alam (md_shadab_alam@outlook.com) or Pavlo Bazilinskyy (pavlo.bazilinskyy@gmail.com).
 
 ## Citation
-If you use the coupled sim for academic work please cite the following paper:
+If you use the traffic-pipeline for academic work please cite the following paper:
 
 > Alam, M.S., Parmar, S.H., Martens, M.H., & Bazilinskyy, P. (2025). Deep Learning Approach for Realistic Traffic Video Changes Across Lighting and Weather Conditions. 8th International Conference on Information and Computer Technologies (ICICT). Hilo, Hawaii, USA. 
 
